@@ -582,7 +582,18 @@
             target.addEventListener("DOMMouseScroll", _onWheel, false);
             target.addEventListener("mousewheel", _onWheel, false);
             target.addEventListener("MozMousePixelScroll", _onWheel, false);
-            target.addEventListener("wheel", _onWheel, false);
+
+            // exclude ie browsers that don't support
+            var _doc = document,
+              _win = window,
+              _el = _doc.createElement("DIV"),
+              isopera = "opera" in _win; // 12-;
+            var isie = "all" in _doc && "attachEvent" in _el && !isopera; // IE10-
+            var isie11 =
+              "msRequestFullscreen" in _el && _doc.documentMode >= 11; // IE11+
+            if (!isie && !isie11) {
+              target.addEventListener("wheel", _onWheel, false);
+            }
           } else {
             document.attachEvent("onmousewheel", _onWheel);
           }
